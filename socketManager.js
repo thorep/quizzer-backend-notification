@@ -13,22 +13,23 @@ const initSocketIO = (server) => {
     });
 
     io.on('connection', (socket) => {
-        console.log('A user connected:', socket.id);
+        // Extract userId from the query parameters
+        const userId = socket.handshake.query.playerId;
 
-        // Handle user registration
-        socket.on('register', (userId) => {
-            userSockets[userId] = socket.id;
-            console.log(`User registered: ${userId} -> ${socket.id}`);
-        });
+        if (!userId) {
+            console.log('Connection attempted without a userId. Disconnecting.');
+            socket.disconnect(); // Disconnect if no userId is provided
+            return;
+        }
+
+        // Register the user
+        userSockets[userId] = socket.id;
+        console.log(`User connected: ${userId} -> ${socket.id}`);
 
         // Handle disconnection
         socket.on('disconnect', () => {
-            const userId = Object.keys(userSockets).find(key => userSockets[key] === socket.id);
-            if (userId) {
-                delete userSockets[userId];
-                console.log(`User disconnected: ${userId}`);
-            }
-            console.log('A user disconnected:', socket.id);
+            delete userSockets[userId];
+            console.log(`User disconnected: ${userId}`);
         });
 
         // Example: Handle custom events
