@@ -40,11 +40,11 @@ const initSocketIO = (server) => {
 };
 
 // Broadcast a message to a specific user
-const sendMessageToUser = (userId, type, message) => {
+const sendMessageToUser = (userId, type, data) => {
     const socketId = userSockets[userId];
     if (socketId) {
-        io.to(socketId).emit(type, message);
-        console.log(`Message sent to user ${userId}: ${message}`);
+        io.to(socketId).emit(type, data);
+        console.log(`Message sent to user ${userId}: ${data}. Type: ${type}`);
     } else {
         console.log(`User ${userId} is not connected.`);
     }

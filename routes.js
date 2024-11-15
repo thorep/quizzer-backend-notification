@@ -12,9 +12,11 @@ router.post('/send', (req, res) => {
     }
 
     try {
-        sendMessageToUser(userId, type, message);
+        console.log("Trying to send message to user")
+        sendMessageToUser(userId, type, data);
         res.status(200).json({ success: true });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: 'Failed to send message' });
     }
 });
